@@ -1,11 +1,10 @@
 package hiber.dao;
 
 import hiber.model.User;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -15,8 +14,6 @@ public class UserDaoImp implements UserDao {
 
    @Autowired
    private SessionFactory sessionFactory;
-    @Autowired
-    private LocalSessionFactoryBean getSessionFactory;
 
    @Override
    public void add(User user) {
@@ -37,19 +34,13 @@ public class UserDaoImp implements UserDao {
          sessionFactory.getCurrentSession().delete(user);
       }
    }
-
+   @Transactional(readOnly = true)
+   @Override
    public User findUserByCar(String model, int series) {
-      User user=null;
-      try {
-         Session session = sessionFactory.getSessionFactory().openSession();
          String HQL = "from User where car.model = :model and car.series = :series";
-         TypedQuery<User> query = session.createQuery(HQL, User.class);
+         TypedQuery<User> query = sessionFactory.getCurrentSession().createQuery(HQL, User.class);
          query.setParameter("model", model);
          query.setParameter("series", series);
-         user = query.getSingleResult();
-      }catch (Exception e) {
-         e.printStackTrace();
-      }
-      return user;
+         return query.getSingleResult();
    }
 }
