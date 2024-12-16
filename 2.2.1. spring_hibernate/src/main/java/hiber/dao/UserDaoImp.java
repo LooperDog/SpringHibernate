@@ -37,10 +37,16 @@ public class UserDaoImp implements UserDao {
    @Transactional(readOnly = true)
    @Override
    public User findUserByCar(String model, int series) {
+      User user = null;
+      try {
          String HQL = "from User where car.model = :model and car.series = :series";
          TypedQuery<User> query = sessionFactory.getCurrentSession().createQuery(HQL, User.class);
          query.setParameter("model", model);
          query.setParameter("series", series);
-         return query.getSingleResult();
+         user =  query.getSingleResult();
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+      return user;
    }
 }
