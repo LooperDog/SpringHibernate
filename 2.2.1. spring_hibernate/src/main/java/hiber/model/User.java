@@ -31,6 +31,10 @@ public class User {
       this.email = email;
    }
 
+   public void setCar (Car car) {
+      this.car = car;
+   }
+
    public Long getId() {
       return id;
    }
