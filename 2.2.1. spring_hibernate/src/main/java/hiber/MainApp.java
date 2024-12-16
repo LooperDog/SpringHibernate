@@ -46,6 +46,9 @@ public class MainApp {
          System.out.println();
       }
 
+
+      System.out.println("Владелец машины: " + userService.findUserByCar("TOYOTA", 2020));
+
       context.close();
    }
 }
